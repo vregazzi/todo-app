@@ -6,12 +6,12 @@ interface TodoItem {
   text: string,
 }
 
-interface AddNewItemButtonProps {
+interface AddNewItemFormProps {
   setList: (list: TodoItem[]) => void,
   list: TodoItem[],
 }
 
-interface TodoItemProps {
+interface TodoEntryProps {
   item: TodoItem,
   setList: (list: TodoItem[]) => void,
   list: TodoItem[],
@@ -35,7 +35,7 @@ function App() {
   );
 }
 
-function TodoEntry(props: TodoItemProps) {
+function TodoEntry(props: TodoEntryProps) {
   const [edit, updateEdit] = useState(false)
   const [inputText, setEditText] = useState(props.item.text);
 
@@ -101,7 +101,7 @@ function TodoEntry(props: TodoItemProps) {
   }
 }
 
-function AddNewItemForm(props: AddNewItemButtonProps) {
+function AddNewItemForm(props: AddNewItemFormProps) {
   const [inputText, setInputText] = useState("");
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
