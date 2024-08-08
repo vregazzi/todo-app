@@ -1,15 +1,27 @@
 import React, { useState } from 'react';
 import './App.css';
 
-interface Item {
+interface TodoItem {
   id: number,
   text: string,
 }
 
+interface AddNewItemButtonProps {
+  setList: (list: TodoItem[]) => void,
+  list: TodoItem[],
+}
+
+interface TodoItemProps {
+  item: TodoItem,
+  setList: (list: TodoItem[]) => void,
+  list: TodoItem[],
+  index: number,
+}
+
 function App() {
-  const [listItems, setListItems] = useState<Item[]>([]);
+  const [listItems, setListItems] = useState<TodoItem[]>([]);
   const todoItems = listItems.map((entry, index) =>
-    <TodoItem item={entry} setList={setListItems} list={listItems} index={index} key={entry.id} />
+    <TodoEntry item={entry} setList={setListItems} list={listItems} index={index} key={entry.id} />
   )
 
   return (
@@ -23,14 +35,7 @@ function App() {
   );
 }
 
-interface TodoItemProps {
-  item: Item,
-  setList: (list: Item[]) => void,
-  list: Item[],
-  index: number,
-}
-
-function TodoItem(props: TodoItemProps) {
+function TodoEntry(props: TodoItemProps) {
   const [edit, updateEdit] = useState(false)
   const [inputText, setEditText] = useState(props.item.text);
 
@@ -96,11 +101,6 @@ function TodoItem(props: TodoItemProps) {
   }
 }
 
-interface AddNewItemButtonProps {
-  setList: (list: Item[]) => void,
-  list: Item[],
-}
-
 function AddNewItemForm(props: AddNewItemButtonProps) {
   const [inputText, setInputText] = useState("");
 
@@ -114,7 +114,7 @@ function AddNewItemForm(props: AddNewItemButtonProps) {
       return;
     }
 
-    let newItem: Item = {
+    let newItem: TodoItem = {
       id: Math.random() * 100,
       text: inputText,
     }
