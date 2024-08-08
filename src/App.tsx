@@ -41,8 +41,9 @@ function TodoEntry(props: TodoEntryProps) {
 
   const handleDeleteClick = () => {
     let newList = [...props.list]
+    let index = newList.findIndex(v => v.id === props.item.id)
 
-    newList.splice(props.index, 1);
+    newList.splice(index, 1);
     props.setList(newList);
   }
 
