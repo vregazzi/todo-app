@@ -32,7 +32,27 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+.submitButton {
+  height: 25px;
+  width: 60px;
+}
+
+.deleteButton {
+  height: 25px;
+  width: 25px;
+}
+
+.editButton {
+  height: 25px;
+  width: 40px;
+}
+
+.editForm {
+  display: inline;
 }
