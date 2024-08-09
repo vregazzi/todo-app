@@ -1,5 +1,19 @@
 import React, { useState } from 'react';
 import './App.css';
+import Button from '@mui/material/Button';
+import { TextField } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import ClearRoundedIcon from '@mui/icons-material/Clear';
+import EditRoundedIcon from '@mui/icons-material/Edit';
+import SaveRoundedIcon from '@mui/icons-material/Save';
+import AddRoundedIcon from '@mui/icons-material/AddRounded'; import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+import Table from '@mui/material/Table';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+
 
 interface TodoItem {
   id: number,
@@ -29,14 +43,16 @@ function App() {
       <div id="main-div">
         <AddNewItemForm setList={setListItems} list={listItems} />
         <br></br>
-        {todoItems}
+        <Table sx={{ maxWidth: 500 }}>
+          {todoItems}
+        </Table>
       </div >
     </>
   );
 }
 
 function TodoEntry(props: TodoEntryProps) {
-  const [edit, updateEdit] = useState(false)
+  const [editMode, updateEdit] = useState(false)
   const [inputText, setEditText] = useState(props.item.text);
 
   const handleDeleteClick = () => {
@@ -53,9 +69,8 @@ function TodoEntry(props: TodoEntryProps) {
     updateEdit(true)
   }
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
-    event.preventDefault();
-    if (!inputText) {
+  const handleSubmit = () => {
+    if (inputText.length < 3) {
       return;
     }
 
@@ -66,40 +81,40 @@ function TodoEntry(props: TodoEntryProps) {
     updateEdit(false)
   }
 
+  const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (event) => {
+    if (event.key === "Enter") {
+      handleSubmit()
+    }
+  }
+
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     setEditText(event.target.value)
   }
 
-  if (!edit) {
-    return (
-      <>
-        <div>
-          <li>
-            <button className="deleteButton" onClick={handleDeleteClick}>X</button>
-            &emsp;
-            <button className="editButton" onClick={handleEditClick}>edit</button>
-            &emsp;
-            {props.item.text}
-          </li>
-        </div>
-      </>
-    )
-  }
-  else {
-    return (
-      <li>
-        <button type="button" className="deleteButton" disabled={true}>X</button>
-        &emsp;
-        <button type="button" className="editButton" disabled={true}>edit</button>
-        &emsp;
-        <form className="editForm" onSubmit={handleSubmit}>
-          <input type="text" value={inputText} onChange={handleChange} autoFocus={true}></input>
-          &emsp;
-          <button className="submitButton">submit</button >
-        </form>
-      </li>
-    )
-  }
+  return (
+    <TableRow>
+      <TableCell>{editMode ?
+        <TextField variant="standard" value={inputText} onChange={handleChange} autoFocus={true} onKeyDown={handleKeyDown} />
+        : props.item.text}
+      </TableCell>
+
+      <TableCell width={50}>{editMode ?
+        <Button variant="contained" size={"small"} style={{ minWidth: 20 }} onClick={handleSubmit}>
+          <SaveRoundedIcon />
+        </Button>
+        : <Button variant="contained" onClick={handleEditClick} size="small" style={{ minWidth: 20 }} disabled={editMode}>
+          <EditRoundedIcon />
+        </Button>
+      }
+      </TableCell>
+
+      <TableCell width={50}>
+        <Button variant="contained" onClick={handleDeleteClick} size="small" style={{ minWidth: 20 }} disabled={editMode}>
+          <ClearRoundedIcon />
+        </Button >
+      </TableCell>
+    </TableRow >
+  )
 }
 
 function AddNewItemForm(props: AddNewItemFormProps) {
@@ -111,7 +126,7 @@ function AddNewItemForm(props: AddNewItemFormProps) {
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
-    if (!inputText) {
+    if (inputText.length < 3) {
       return;
     }
 
@@ -126,11 +141,20 @@ function AddNewItemForm(props: AddNewItemFormProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <p>To do list</p>
-      <input type="text" value={inputText} onChange={handleChange}></input>
+      <Typography variant="h6" style={{ paddingTop: "30px" }} gutterBottom>
+        To do list
+      </Typography>
+      <TextField
+        variant="standard"
+        value={inputText}
+        onChange={handleChange}
+        autoFocus={true}
+        placeholder="Enter task" />
       &emsp;
-      <button className="submitButton">submit</button >
-    </form>
+      <Button variant="contained" type="submit" className='submitButton'>
+        <AddRoundedIcon fontSize='small'></AddRoundedIcon>
+      </Button>
+    </form >
   )
 }
 
