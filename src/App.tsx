@@ -32,6 +32,18 @@ interface TodoEntryProps {
   index: number,
 }
 
+const validateInput = (text: string, list: TodoItem[]) => {
+  let error = "";
+  if (text.length < 3) {
+    error = "Text must be at least 3 characters long.";
+  }
+  else if (list.some((item) => item.text === text)) {
+    error = "Input must be new value.";
+  }
+
+  return error;
+}
+
 function App() {
   const [listItems, setListItems] = useState<TodoItem[]>([]);
   const todoItems = listItems.map((entry, index) =>
@@ -39,21 +51,20 @@ function App() {
   )
 
   return (
-    <>
-      <div id="main-div">
-        <AddNewItemForm setList={setListItems} list={listItems} />
-        <br></br>
-        <Table sx={{ maxWidth: 500 }}>
-          {todoItems}
-        </Table>
-      </div >
-    </>
+    <div id="main-div">
+      <AddNewItemForm setList={setListItems} list={listItems} />
+      <br></br>
+      <Table sx={{ maxWidth: 500 }}>
+        {todoItems}
+      </Table>
+    </div >
   );
 }
 
 function TodoEntry(props: TodoEntryProps) {
   const [editMode, updateEdit] = useState(false)
   const [inputText, setEditText] = useState(props.item.text);
+  const [textError, setTextError] = useState("")
 
   const handleDeleteClick = () => {
     let newList = [...props.list]
@@ -70,7 +81,14 @@ function TodoEntry(props: TodoEntryProps) {
   }
 
   const handleSubmit = () => {
-    if (inputText.length < 3) {
+    if (inputText === props.item.text) {
+      updateEdit(false)
+      return;
+    }
+
+    const error = validateInput(inputText, props.list);
+    if (error) {
+      setTextError(error);
       return;
     }
 
@@ -93,12 +111,22 @@ function TodoEntry(props: TodoEntryProps) {
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     setEditText(event.target.value)
+    setTextError("")
   }
 
   return (
     <TableRow>
       <TableCell>{editMode ?
-        <TextField variant="standard" value={inputText} onChange={handleChange} autoFocus={true} onKeyDown={handleKeyDown} />
+        <TextField
+          variant="standard"
+          value={inputText}
+          onChange={handleChange}
+          autoFocus={true}
+          error={textError ? true : false}
+          helperText={textError}
+          autoComplete='off'
+          onKeyDown={handleKeyDown}
+        />
         : props.item.text}
       </TableCell>
 
@@ -123,14 +151,18 @@ function TodoEntry(props: TodoEntryProps) {
 
 function AddNewItemForm(props: AddNewItemFormProps) {
   const [inputText, setInputText] = useState("");
+  const [textError, setTextError] = useState("")
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     setInputText(event.target.value)
+    setTextError("")
   }
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
-    if (inputText.length < 3) {
+    const error = validateInput(inputText, props.list);
+    if (error) {
+      setTextError(error);
       return;
     }
 
@@ -153,7 +185,11 @@ function AddNewItemForm(props: AddNewItemFormProps) {
         value={inputText}
         onChange={handleChange}
         autoFocus={true}
-        placeholder="Enter task" />
+        error={textError ? true : false}
+        helperText={textError}
+        autoComplete='off'
+        placeholder="Enter task"
+      />
       &emsp;
       <Button variant="contained" type="submit" className='submitButton'>
         <AddRoundedIcon fontSize='small'></AddRoundedIcon>
