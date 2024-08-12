@@ -82,7 +82,11 @@ function TodoEntry(props: TodoEntryProps) {
   }
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (event) => {
-    if (event.key === "Enter") {
+    if (event.key === "Escape") {
+      setEditText(props.item.text)
+      updateEdit(false);
+    }
+    else if (event.key === "Enter") {
       handleSubmit()
     }
   }
