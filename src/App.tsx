@@ -1,9 +1,8 @@
-import { useState } from 'react';
-import Table from '@mui/material/Table';
-import TodoEntry from './TodoEntry';
-import AddNewItemForm from './AddNewItemForm';
-import TodoItem from './types/TodoItem';
-
+import { useState } from "react";
+import Table from "@mui/material/Table";
+import TodoEntry from "./TodoEntry";
+import AddNewItemForm from "./AddNewItemForm";
+import TodoItem from "./types/TodoItem";
 
 export default function App() {
   const [listItems, setListItems] = useState<TodoItem[]>([]);
@@ -13,7 +12,7 @@ export default function App() {
       <AddNewItemForm setList={setListItems} list={listItems} />
       <br></br>
       <Table sx={{ maxWidth: 500 }}>
-        {listItems.map((entry, index) =>
+        {listItems.map((entry, index) => (
           <TodoEntry
             key={entry.id}
             item={entry}
@@ -21,8 +20,8 @@ export default function App() {
             list={listItems}
             index={index}
           />
-        )}
+        ))}
       </Table>
-    </div >
+    </div>
   );
 }
