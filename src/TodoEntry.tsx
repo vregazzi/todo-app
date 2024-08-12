@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { SetStateAction, useState } from 'react';
 import './App.css';
 import Button from '@mui/material/Button';
 import { TextField } from '@mui/material';
@@ -23,13 +23,13 @@ const validateInput = (text: string, list: TodoItem[]) => {
 
 interface TodoEntryProps {
     item: TodoItem,
-    setList: (list: TodoItem[]) => void,
+    setList: React.Dispatch<SetStateAction<TodoItem[]>>,
     list: TodoItem[],
     index: number,
 }
 
 export default function TodoEntry(props: TodoEntryProps) {
-    const [editMode, updateEdit] = useState(false)
+    const [editMode, setEditMode] = useState(false)
     const [inputText, setEditText] = useState(props.item.text);
     const [textError, setTextError] = useState("")
 
@@ -42,14 +42,12 @@ export default function TodoEntry(props: TodoEntryProps) {
     }
 
     const handleEditClick = () => {
-        let newList = [...props.list]
-        props.setList(newList);
-        updateEdit(true)
+        setEditMode(true)
     }
 
     const handleSubmit = () => {
         if (inputText === props.item.text) {
-            updateEdit(false)
+            setEditMode(false)
             return;
         }
 
@@ -59,17 +57,20 @@ export default function TodoEntry(props: TodoEntryProps) {
             return;
         }
 
-        let newList = [...props.list]
-        newList[props.index] = { text: inputText, id: props.item.id }
-        props.setList(newList)
+        props.setList((previousList) => {
+            let newList = [...previousList];
+            newList[props.index] = { text: inputText, id: props.item.id };
 
-        updateEdit(false)
+            return newList;
+        });
+
+        setEditMode(false);
     }
 
     const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (event) => {
         if (event.key === "Escape") {
             setEditText(props.item.text)
-            updateEdit(false);
+            setEditMode(false);
         }
         else if (event.key === "Enter") {
             handleSubmit()

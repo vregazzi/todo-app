@@ -19,7 +19,7 @@ const validateInput = (text: string, list: TodoItem[]) => {
 }
 
 interface AddNewItemFormProps {
-    setList: (list: TodoItem[]) => void,
+    setList: React.Dispatch<React.SetStateAction<TodoItem[]>>
     list: TodoItem[],
 }
 
@@ -45,7 +45,7 @@ export default function AddNewItemForm(props: AddNewItemFormProps) {
             text: inputText,
         }
 
-        props.setList([...props.list, newItem])
+        props.setList((previousList) => { return [...previousList, newItem] })
         setInputText("")
     }
 
