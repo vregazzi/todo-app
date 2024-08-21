@@ -7,7 +7,6 @@ import EditRoundedIcon from "@mui/icons-material/Edit";
 import SaveRoundedIcon from "@mui/icons-material/Save";
 import { TableCell, TableRow } from "@mui/material";
 import TodoItem from "./types/TodoItem";
-import api from "./utils/api";
 
 const validateInput = (text: string, list: TodoItem[]) => {
   let error = "";
@@ -22,9 +21,9 @@ const validateInput = (text: string, list: TodoItem[]) => {
 
 interface TodoEntryProps {
   item: TodoItem;
-  setList: React.Dispatch<SetStateAction<TodoItem[]>>;
   list: TodoItem[];
-  index: number;
+  deleteTodo: (id: string) => Promise<void>;
+  editTodo: (id: string, text: string) => Promise<void>;
 }
 
 export default function TodoEntry(props: TodoEntryProps) {
@@ -33,8 +32,7 @@ export default function TodoEntry(props: TodoEntryProps) {
   const [textError, setTextError] = useState("");
 
   const handleDeleteClick = async () => {
-    await api.deleteTodoItem(props.item.id);
-    props.setList(await api.getTodoItems());
+    props.deleteTodo(props.item.id);
   };
 
   const handleEditClick = () => {
@@ -53,9 +51,7 @@ export default function TodoEntry(props: TodoEntryProps) {
       return;
     }
 
-    await api.patchTodoItem(props.item.id, inputText);
-    props.setList(await api.getTodoItems());
-
+    props.editTodo(props.item.id, inputText);
     setEditMode(false);
   };
 

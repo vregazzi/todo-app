@@ -4,7 +4,6 @@ import { TextField } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import TodoItem from "./types/TodoItem";
-import api from "./utils/api";
 
 const validateInput = (text: string, list: TodoItem[]) => {
   let error = "";
@@ -18,8 +17,8 @@ const validateInput = (text: string, list: TodoItem[]) => {
 };
 
 interface AddNewItemFormProps {
-  setList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
   list: TodoItem[];
+  createTodo: (itemText: string) => Promise<void>;
 }
 
 export default function AddNewItemForm(props: AddNewItemFormProps) {
@@ -41,8 +40,7 @@ export default function AddNewItemForm(props: AddNewItemFormProps) {
       return;
     }
 
-    await api.postTodoItem(inputText);
-    props.setList(await api.getTodoItems());
+    props.createTodo(inputText);
     setInputText("");
   };
 
