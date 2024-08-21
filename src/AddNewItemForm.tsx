@@ -4,6 +4,7 @@ import { TextField } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import TodoItem from "./types/TodoItem";
+import api from "./utils/api";
 
 const validateInput = (text: string, list: TodoItem[]) => {
   let error = "";
@@ -30,7 +31,9 @@ export default function AddNewItemForm(props: AddNewItemFormProps) {
     setTextError("");
   };
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (
+    event
+  ) => {
     event.preventDefault();
     const error = validateInput(inputText, props.list);
     if (error) {
@@ -38,14 +41,8 @@ export default function AddNewItemForm(props: AddNewItemFormProps) {
       return;
     }
 
-    let newItem: TodoItem = {
-      id: Math.random() * 100,
-      text: inputText,
-    };
-
-    props.setList((previousList) => {
-      return [...previousList, newItem];
-    });
+    await api.postTodoItem(inputText);
+    props.setList(await api.getTodoItems());
     setInputText("");
   };
 

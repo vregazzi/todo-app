@@ -7,6 +7,7 @@ import EditRoundedIcon from "@mui/icons-material/Edit";
 import SaveRoundedIcon from "@mui/icons-material/Save";
 import { TableCell, TableRow } from "@mui/material";
 import TodoItem from "./types/TodoItem";
+import api from "./utils/api";
 
 const validateInput = (text: string, list: TodoItem[]) => {
   let error = "";
@@ -31,19 +32,16 @@ export default function TodoEntry(props: TodoEntryProps) {
   const [inputText, setEditText] = useState(props.item.text);
   const [textError, setTextError] = useState("");
 
-  const handleDeleteClick = () => {
-    let newList = [...props.list];
-    let index = newList.findIndex((v) => v.id === props.item.id);
-
-    newList.splice(index, 1);
-    props.setList(newList);
+  const handleDeleteClick = async () => {
+    await api.deleteTodoItem(props.item.id);
+    props.setList(await api.getTodoItems());
   };
 
   const handleEditClick = () => {
     setEditMode(true);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (inputText === props.item.text) {
       setEditMode(false);
       return;
@@ -55,12 +53,8 @@ export default function TodoEntry(props: TodoEntryProps) {
       return;
     }
 
-    props.setList((previousList) => {
-      let newList = [...previousList];
-      newList[props.index] = { text: inputText, id: props.item.id };
-
-      return newList;
-    });
+    await api.patchTodoItem(props.item.id, inputText);
+    props.setList(await api.getTodoItems());
 
     setEditMode(false);
   };
