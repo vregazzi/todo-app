@@ -1,4 +1,5 @@
-import React, { SetStateAction, useState } from "react";
+"use client";
+import React, { useState } from "react";
 import "./App.css";
 import Button from "@mui/material/Button";
 import { TextField } from "@mui/material";

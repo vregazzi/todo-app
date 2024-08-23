@@ -1,17 +1,22 @@
+"use server";
+import { revalidateTag } from "next/cache";
+
 const baseUrl = "http://localhost:5100";
 
-async function getTodoItems(): Promise<any> {
+export async function getTodoItems(): Promise<any> {
   const requestOptions: RequestInit = {
     method: "GET",
     redirect: "follow",
+    next: {
+      tags: ["GET_TODO_ITEMS"],
+    },
   };
 
   const response = await fetch(`${baseUrl}/todo`, requestOptions);
-  const data = await response.json();
-  return data;
+  return await response.json();
 }
 
-function postTodoItem(itemText: string) {
+export async function postTodoItem(itemText: string) {
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
@@ -26,32 +31,32 @@ function postTodoItem(itemText: string) {
     redirect: "follow",
   };
 
-  return fetch(`${baseUrl}/todo`, requestOptions);
+  let response = await fetch(`${baseUrl}/todo`, requestOptions);
+  revalidateTag("GET_TODO_ITEMS");
+  return await response.json();
 }
 
-function deleteTodoItem(id: string) {
+export async function deleteTodoItem(id: string) {
   const requestOptions: RequestInit = {
     method: "DELETE",
     redirect: "follow",
   };
 
-  return fetch(`${baseUrl}/todo/${id}`, requestOptions);
+  const response = await fetch(`${baseUrl}/todo/${id}`, requestOptions);
+  revalidateTag("GET_TODO_ITEMS");
+  return response.ok;
 }
 
-async function patchTodoItem(id: string, text: string) {
+export async function patchTodoItem(id: string, text: string) {
   const requestOptions: RequestInit = {
     method: "PATCH",
     redirect: "follow",
   };
 
-  return fetch(`${baseUrl}/todo/${id}?text=${text}`, requestOptions);
+  const response = await fetch(
+    `${baseUrl}/todo/${id}?text=${text}`,
+    requestOptions
+  );
+  revalidateTag("GET_TODO_ITEMS");
+  return await response.json();
 }
-
-const api = {
-  getTodoItems,
-  postTodoItem,
-  deleteTodoItem,
-  patchTodoItem,
-};
-
-export default api;
