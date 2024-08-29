@@ -1,0 +1,13 @@
+{
+    "name": "React App",
+    "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
+    "customizations": {
+        "vscode": {
+            "settings": {},
+            "extensions": [
+                "esbenp.prettier-vscode",
+                "ms-azuretools.vscode-docker"
+            ]
+        }
+    }
+}
