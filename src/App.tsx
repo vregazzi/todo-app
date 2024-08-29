@@ -17,7 +17,6 @@ interface Action {
 }
 
 export default function App(props: AppProps) {
-  const [pending, startTransition] = useTransition();
   const [optimisticTodoItems, updateOptimistic] = useOptimistic(
     props.todoItems,
     (state, action: Action) => {
@@ -39,19 +38,17 @@ export default function App(props: AppProps) {
   );
 
   const createTodo = async (text: string) => {
-    startTransition(() => updateOptimistic({ type: "create", value: text }));
+    updateOptimistic({ type: "create", value: text });
     await api.postTodoItem(text);
   };
 
   const deleteTodo = async (id: string) => {
-    startTransition(() => updateOptimistic({ type: "delete", value: id }));
+    updateOptimistic({ type: "delete", value: id });
     await api.deleteTodoItem(id);
   };
 
   const editTodo = async (id: string, text: string) => {
-    startTransition(() =>
-      updateOptimistic({ type: "edit", value: { id, text } })
-    );
+    updateOptimistic({ type: "edit", value: { id, text } });
     await api.patchTodoItem(id, text);
   };
 
@@ -59,7 +56,6 @@ export default function App(props: AppProps) {
     <div id="main-div">
       <AddNewItemForm list={optimisticTodoItems} createTodo={createTodo} />
       <br></br>
-      {pending && <h1>{"pending"}</h1>}
       <Table sx={{ maxWidth: 500 }}>
         <TableBody>
           {optimisticTodoItems.map((entry) => (
