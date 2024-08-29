@@ -1,7 +1,7 @@
 "use server";
 import { revalidateTag } from "next/cache";
 
-const baseUrl = "http://localhost:5100";
+const baseUrl = "http://api:5100";
 
 export async function getTodoItems(): Promise<any> {
   const requestOptions: RequestInit = {

@@ -1,6 +1,10 @@
 {
     "name": "React App",
     "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
+    "runArgs": [
+        "--network=todo-app",
+        "--name=todo-app-frontend"
+    ],
     "customizations": {
         "vscode": {
             "settings": {},
@@ -9,5 +13,6 @@
                 "ms-azuretools.vscode-docker"
             ]
         }
-    }
+    },
+    "initializeCommand": "docker network create todo-app || true"
 }
