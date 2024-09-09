@@ -30,7 +30,7 @@
     "src",
     "./build/types/**/*.ts",
     ".next/types/**/*.ts"
-  ],
+, "babel.config.js"  ],
   "exclude": [
     "node_modules"
   ]

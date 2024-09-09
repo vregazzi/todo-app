@@ -9,7 +9,7 @@ import SaveRoundedIcon from "@mui/icons-material/Save";
 import { TableCell, TableRow } from "@mui/material";
 import TodoItem from "./types/TodoItem";
 
-const validateInput = (text: string, list: TodoItem[]) => {
+export const validateInput = (text: string, list: TodoItem[]) => {
   let error = "";
   if (text.length < 3) {
     error = "Text must be at least 3 characters long.";
@@ -92,6 +92,7 @@ export default function TodoEntry(props: TodoEntryProps) {
       <TableCell width={50}>
         {editMode ? (
           <Button
+            title="Save todo item."
             variant="contained"
             size={"small"}
             style={{ minWidth: 20 }}
@@ -101,6 +102,7 @@ export default function TodoEntry(props: TodoEntryProps) {
           </Button>
         ) : (
           <Button
+            title="Edit todo item."
             variant="contained"
             onClick={handleEditClick}
             size="small"
@@ -114,6 +116,7 @@ export default function TodoEntry(props: TodoEntryProps) {
 
       <TableCell width={50}>
         <Button
+          title="Delete todo item."
           variant="contained"
           onClick={handleDeleteClick}
           size="small"
