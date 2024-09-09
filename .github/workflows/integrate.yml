@@ -26,6 +26,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           load: true
+          target: builder
           tags: ${{ env.TEST_TAG }}
 
       - name: Test
