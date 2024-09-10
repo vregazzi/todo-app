@@ -6,9 +6,10 @@ Frontend project for a to do app, using React, TypeScript, and Next.js
 
 ### Using Dev Containers
 
-1.  Open in VS Code
-2.  When prompted select "Reopen in Container"
-3.  Run `npm run dev`
+1.  Open in VS Code.
+2.  When prompted select "Reopen in Container".
+3.  Make sure [backend](https://github.com/vregazzi/todo-app-backend) is currently running before starting this project.
+4.  Press `F5` OR run `npm run dev`.
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
